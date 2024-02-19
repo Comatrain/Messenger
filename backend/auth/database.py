@@ -1,4 +1,4 @@
-from .models import User, Base
+from .models import User
 from ..config import settings
 from typing import AsyncGenerator
 from fastapi import Depends

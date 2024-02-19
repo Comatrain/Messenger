@@ -1,7 +1,7 @@
 import os
 from typing import Optional
 
-from fastapi import Depends, Request
+from fastapi import Depends, Request, Response
 from fastapi_users import BaseUserManager, IntegerIDMixin
 
 from .database import get_user_db
@@ -29,6 +29,9 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
         self, user: User, token: str, request: Optional[Request] = None
     ):
         print(f"Verification requested for user {user.id}. Verification token: {token}")
+
+    async def on_after_login(self, user: User, request: Optional[Request] = None, response: Optional[Response] = None):
+        print(f"User {user.id} logged in.")
 
 
 async def get_user_manager(user_db=Depends(get_user_db)):

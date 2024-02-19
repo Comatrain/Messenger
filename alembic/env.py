@@ -14,7 +14,7 @@ config = context.config
 # Here we allow ourselves to pass interpolation vars to alembic.ini
 # from the .env file
 section = config.config_ini_section
-config.set_section_option(section, "ALEMBIC_DATABASE_URL", settings.DATABASE_URL)
+config.set_section_option(section, "ALEMBIC_DATABASE_ASYNC_URL", settings.DATABASE_ASYNC_URL)
 
 
 # Interpret the config file for Python logging.

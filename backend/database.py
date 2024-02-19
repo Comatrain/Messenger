@@ -10,18 +10,18 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 from . import models
 
 
-SQLALCHEMY_DATABASE_URL = settings.DATABASE_URL
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
-
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+# SQLALCHEMY_DATABASE_URL = settings.DATABASE_URL
+# engine = create_engine(SQLALCHEMY_DATABASE_URL)
+#
+# SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+#
+#
+# def get_db():
+#     db = SessionLocal()
+#     try:
+#         yield db
+#     finally:
+#         db.close()
 
 
 DATABASE_URL = settings.DATABASE_ASYNC_URL

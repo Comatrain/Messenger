@@ -1,11 +1,11 @@
 from fastapi import FastAPI, Depends, Request
-from .auth.auth import auth_backend
+from .auth.config import auth_backend
 from fastapi_users import FastAPIUsers
 
 from .auth.manager import get_user_manager
 from .auth.models import User
 from .auth.schemas import UserRead, UserCreate
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
@@ -34,21 +34,23 @@ app.include_router(
 )
 
 current_user = fastapi_users.current_user()
-current_active_user = fastapi_users.current_user(optional=True, active=True)
 
 
 @app.get("/auth/jwt/login", response_class=HTMLResponse)
-async def test(request: Request, user: User | None = Depends(current_active_user)):
-    print(user)
-    if user is None:
-        return templates.TemplateResponse(
-            request=request, name="index.html"
-        )
-    else:
-        return RedirectResponse(url="/protected-route")
+async def test(request: Request):
+    return templates.TemplateResponse(
+        request=request, name="auth_login.html"
+    )
 
 
-@app.get("/protected-route")
+@app.get("/auth/register", response_class=HTMLResponse)
+async def test(request: Request):
+    return templates.TemplateResponse(
+        request=request, name="auth_register.html"
+    )
+
+
+@app.get("/success-route")
 def protected_route(user: User = Depends(current_user)):
     return f"Hello, {user.email}"
 

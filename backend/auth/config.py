@@ -8,7 +8,6 @@ cookie_transport = CookieTransport(cookie_name="messenger", cookie_max_age=3600)
 
 load_dotenv(dotenv_path=env_path)
 AUTH_SECRET = os.getenv("AUTH_SECRET")
-print(AUTH_SECRET)
 
 
 def get_jwt_strategy() -> JWTStrategy:
