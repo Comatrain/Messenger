@@ -1,10 +1,12 @@
 from fastapi import FastAPI, Depends, Request
-from .auth.config import auth_backend
 from fastapi_users import FastAPIUsers
-
+from .auth.config import auth_backend
 from .auth.manager import get_user_manager
 from .auth.models import User
 from .auth.schemas import UserRead, UserCreate
+from .auth.utils import router as user_router
+# TODO: research
+import frontend.pages.router as pages_router
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -12,8 +14,8 @@ from fastapi.templating import Jinja2Templates
 
 app = FastAPI()
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory="./frontend/static"), name="static")
+templates = Jinja2Templates(directory="./frontend/templates")
 
 
 fastapi_users = FastAPIUsers[User, int](
@@ -26,12 +28,13 @@ app.include_router(
     prefix="/auth/jwt",
     tags=["auth"],
 )
-
 app.include_router(
     fastapi_users.get_register_router(UserRead, UserCreate),
     prefix="/auth",
     tags=["auth"],
 )
+app.include_router(user_router)
+app.include_router(pages_router.router)
 
 current_user = fastapi_users.current_user()
 
@@ -51,10 +54,10 @@ async def test(request: Request):
 
 
 @app.get("/success-route")
-def protected_route(user: User = Depends(current_user)):
+async def protected_route(user: User = Depends(current_user)):
     return f"Hello, {user.email}"
 
 
 @app.get("/unprotected-route")
-def unprotected_route():
+async def unprotected_route():
     return f"Hello, anonym"
