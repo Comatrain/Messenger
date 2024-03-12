@@ -1,11 +1,34 @@
-from sqlalchemy.orm import Session
-from . import models
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio.session import AsyncSession
+
+from . import schemas, models
 
 
-def get_users(db: Session):
-    return db.query(models.User).all()
+async def create_user(user: schemas.UserCreateSchema,
+                      db: AsyncSession) -> models.User:
+    db_user = models.User(
+        email=user.email,
+        username=user.username,
+        hashed_password=user.password,
+        role_id=user.role_id,
+        is_active=user.is_active,
+        is_superuser=user.is_superuser,
+        is_verified=user.is_verified,
+    )
+    db.add(db_user)
+    await db.commit()
+    await db.refresh(db_user)
+    return db_user
 
 
-def get_user(user_id: int,
-             db: Session):
-    return db.query(models.User).filter_by(id=user_id).one()
+async def get_user_by_username(username: str,
+                               db: AsyncSession) -> models.User:
+    stmt = (
+        select(models.User)
+        .filter(models.User.username == username)
+    )
+    result = await db.execute(stmt)
+    return (
+        result.scalars()
+        .one()
+    )
