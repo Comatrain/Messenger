@@ -10,10 +10,7 @@ from .. import crud, models
 from ..database import get_async_session
 from ..schemas import UserCreateSchema
 
-router = APIRouter(
-    prefix="/auth",
-    tags=["Auth"]
-)
+router = APIRouter(prefix="/auth", tags=["Auth"])
 
 
 templates = Jinja2Templates(directory="./frontend/templates")
@@ -25,20 +22,24 @@ def index(request: Request):
 
 
 @router.post("/register")
-async def create_account(user: UserCreateSchema,
-                         db: AsyncSession = Depends(get_async_session)):
+async def create_account(
+    user: UserCreateSchema,
+    db: AsyncSession = Depends(get_async_session),
+):
     user.password = hash_password(user.password)
     await crud.create_user(user=user, db=db)
-    return 'Account was created. Now go to http://localhost:8000/pages/home'
+    return "Account was created. Now go to http://localhost:8000/pages/home"
 
 
 @router.get("/users/me/")
 async def test_read_users_me(
-        current_user: Annotated[models.User, Depends(get_current_user)]):
+    current_user: Annotated[models.User, Depends(get_current_user)]
+):
     return current_user
 
 
 @router.get("/users/me/items/")
 async def test_read_own_items(
-        current_user: Annotated[models.User, Depends(get_current_active_user)]):
+    current_user: Annotated[models.User, Depends(get_current_active_user)]
+):
     return [{"item_id": "Foo", "owner": current_user.username}]

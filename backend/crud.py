@@ -4,8 +4,7 @@ from sqlalchemy.ext.asyncio.session import AsyncSession
 from . import schemas, models
 
 
-async def create_user(user: schemas.UserCreateSchema,
-                      db: AsyncSession) -> models.User:
+async def create_user(user: schemas.UserCreateSchema, db: AsyncSession) -> models.User:
     db_user = models.User(
         email=user.email,
         username=user.username,
@@ -21,14 +20,7 @@ async def create_user(user: schemas.UserCreateSchema,
     return db_user
 
 
-async def get_user_by_username(username: str,
-                               db: AsyncSession) -> models.User:
-    stmt = (
-        select(models.User)
-        .filter(models.User.username == username)
-    )
+async def get_user_by_username(username: str, db: AsyncSession) -> models.User:
+    stmt = select(models.User).filter(models.User.username == username)
     result = await db.execute(stmt)
-    return (
-        result.scalars()
-        .one()
-    )
+    return result.scalars().one()

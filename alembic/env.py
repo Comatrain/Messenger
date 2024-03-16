@@ -14,7 +14,9 @@ config = context.config
 # Here we allow ourselves to pass interpolation vars to alembic.ini
 # from the .env file
 section = config.config_ini_section
-config.set_section_option(section, "ALEMBIC_DATABASE_ASYNC_URL", settings.DATABASE_ASYNC_URL)
+config.set_section_option(
+    section, "ALEMBIC_DATABASE_ASYNC_URL", settings.DATABASE_ASYNC_URL
+)
 
 
 # Interpret the config file for Python logging.
@@ -25,6 +27,7 @@ if config.config_file_name is not None:
 # add your model's MetaData object here
 # for 'autogenerate' support
 from backend.auth.models import Base
+
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
@@ -71,9 +74,7 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()
