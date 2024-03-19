@@ -2,15 +2,36 @@
 <html>
    <body>
       <h1>Login form</h1>
-      <form action="" method="post" id="myForm">
-         <label for="username">Username:</label><br>
-         <input type="text" id="username" name="username">
-          <br>
-         <label for="password">Password:</label><br>
-         <input type="text" id="password" name="password">
-          <br>
-         <input class="submit" type="submit" value="Log in">
+      <form method="post" id="myForm">
+         <input type="text" name="email" placeholder="email">
+         <br>
+         <input type="text" name="username" placeholder="username">
+         <br>
+         <input type="password" name="password" placeholder="password">
+         <br>
+         <input type="button" value="Submit" onclick="submitForm()">
       </form>
-      <div id="response"></div>
+      <div id="responseArea"></div>
+         <script>
+         function submitForm() {
+             var formElement = document.getElementById('myForm');
+             var data = new FormData(formElement);
+             fetch('/auth/login', {
+                   method: 'POST',
+                   headers: {
+                     'Accept': 'application/json',
+                     'Content-Type': 'application/json'
+                 },
+                   body: JSON.stringify(Object.fromEntries(data))
+                 })
+                 .then(resp => resp.text())  // or, resp.json(), etc.
+                 .then(data => {
+                   document.getElementById("responseArea").innerHTML = data;
+                 })
+                 .catch(error => {
+                   console.error(error);
+                 });
+         }
+      </script>
    </body>
 </html>

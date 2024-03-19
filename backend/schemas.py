@@ -1,15 +1,13 @@
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, model_validator, Json
+from urllib.parse import parse_qs
 
 
-class UserSchema(BaseModel):
-    id: int
+class UserLoginSchema(BaseModel):
     email: str
     username: str
-    is_active: bool = True
-    is_superuser: bool = False
-    is_verified: bool = False
+    password: str
 
 
 class UserCreateSchema(BaseModel):
