@@ -12,7 +12,7 @@ from .. import crud, models
 from ..config import settings
 from ..database import get_async_session
 
-router = APIRouter(prefix="/auth", tags=["Auth"])
+router = APIRouter(prefix="/__old_jwt_auth", tags=["Auth"])
 
 
 class Token(BaseModel):
@@ -22,7 +22,7 @@ class Token(BaseModel):
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="__old_jwt_auth/token")
 
 
 async def authenticate_user(
@@ -93,14 +93,14 @@ async def get_current_active_user(
     return current_user
 
 
-# special endpoint for getting token during auth
+# special endpoint for getting token during __old_jwt_auth
 @router.post("/token", response_model=Token)
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     db: AsyncSession = Depends(get_async_session),
 ) -> Token:
 
-    # User auth
+    # User __old_jwt_auth
     user = await authenticate_user(
         username=form_data.username,
         password=form_data.password,

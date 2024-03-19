@@ -11,7 +11,7 @@ from ..database import get_async_session
 from ..schemas import UserCreateSchema, UserLoginSchema
 from urllib.parse import parse_qs
 
-router = APIRouter(prefix="/auth", tags=["Auth"])
+router = APIRouter(prefix="/__old_jwt_auth", tags=["Auth"])
 
 
 templates = Jinja2Templates(directory="./frontend/templates")
