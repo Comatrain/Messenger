@@ -1,6 +1,5 @@
-from sqlalchemy import Integer, String, Boolean, JSON, MetaData
-from sqlalchemy.orm import mapped_column, DeclarativeBase
-
+from sqlalchemy import MetaData, ForeignKey
+from sqlalchemy.orm import mapped_column, DeclarativeBase, Mapped, relationship
 
 # configure constraint naming convention
 convention = {
@@ -22,19 +21,30 @@ class Base(DeclarativeBase):
 class Role(Base):
     __tablename__ = "role"
 
-    id = mapped_column(Integer, primary_key=True)
-    name = mapped_column(String(length=320), nullable=False)
-    permissions = mapped_column(JSON)
+    id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
+    name: Mapped[str]
 
 
 class User(Base):
     __tablename__ = "user"
 
-    id = mapped_column(Integer, primary_key=True)
-    email = mapped_column(String(length=320), unique=True, index=True, nullable=False)
-    username = mapped_column(String(length=320), unique=True, nullable=False)
-    hashed_password = mapped_column(String(length=1024), nullable=False)
-    role_id = mapped_column(Integer, nullable=False)
-    is_active = mapped_column(Boolean, default=True, nullable=False)
-    is_superuser = mapped_column(Boolean, default=False, nullable=False)
-    is_verified = mapped_column(Boolean, default=False, nullable=False)
+    id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
+    email: Mapped[str] = mapped_column(unique=True, index=True)
+    username: Mapped[str] = mapped_column(unique=True)
+    hashed_password: Mapped[bytes]
+    salt: Mapped[bytes]
+    role_id: Mapped[int]
+    is_active: Mapped[bool] = mapped_column(default=True)
+    is_superuser: Mapped[bool] = mapped_column(default=False)
+    is_verified: Mapped[bool] = mapped_column(default=False)
+
+    # children
+    cookie_session: Mapped[list["CookieSession"]] = relationship()
+
+
+class CookieSession(Base):
+    __tablename__ = "cookie_session"
+
+    id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
+    username_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    cookie: Mapped[str]
