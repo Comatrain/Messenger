@@ -1,5 +1,5 @@
-from sqlalchemy import MetaData, ForeignKey
-from sqlalchemy.orm import mapped_column, DeclarativeBase, Mapped, relationship
+from sqlalchemy import MetaData
+from sqlalchemy.orm import mapped_column, DeclarativeBase, Mapped
 
 # configure constraint naming convention
 convention = {
@@ -31,20 +31,5 @@ class User(Base):
     id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
     email: Mapped[str] = mapped_column(unique=True, index=True)
     username: Mapped[str] = mapped_column(unique=True)
-    hashed_password: Mapped[bytes]
-    salt: Mapped[bytes]
+    password: Mapped[str]
     role_id: Mapped[int]
-    is_active: Mapped[bool] = mapped_column(default=True)
-    is_superuser: Mapped[bool] = mapped_column(default=False)
-    is_verified: Mapped[bool] = mapped_column(default=False)
-
-    # children
-    cookie_session: Mapped[list["CookieSession"]] = relationship()
-
-
-class CookieSession(Base):
-    __tablename__ = "cookie_session"
-
-    id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
-    username_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
-    cookie: Mapped[str]
