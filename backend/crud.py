@@ -9,7 +9,7 @@ from . import schemas, models
 # TODO: чтоб возвращался инстанс pydantic, а не алхимии
 async def create_user(
     user: schemas.UserSchema, db: AsyncSession
-) -> status.HTTP_201_CREATED:
+) -> models.User:
     db_user = models.User(
         email=user.email,
         username=user.username,
