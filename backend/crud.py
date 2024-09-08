@@ -1,4 +1,3 @@
-from fastapi import status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
@@ -7,9 +6,7 @@ from . import schemas, models
 
 # TODO: Вов, тут надо нормально сделать
 # TODO: чтоб возвращался инстанс pydantic, а не алхимии
-async def create_user(
-    user: schemas.UserSchema, db: AsyncSession
-) -> models.User:
+async def create_user(user: schemas.UserSchema, db: AsyncSession) -> models.User:
     db_user = models.User(
         email=user.email,
         username=user.username,

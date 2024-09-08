@@ -1,5 +1,5 @@
-from sqlalchemy import MetaData
-from sqlalchemy.orm import mapped_column, DeclarativeBase, Mapped
+from sqlalchemy import MetaData, ForeignKey
+from sqlalchemy.orm import mapped_column, DeclarativeBase, Mapped, relationship
 
 # configure constraint naming convention
 convention = {
@@ -18,18 +18,44 @@ class Base(DeclarativeBase):
     metadata = metadata_obj
 
 
-class Role(Base):
-    __tablename__ = "role"
+class Account(Base):
+    __tablename__ = "account"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
-    name: Mapped[str]
+    login: Mapped[str] = mapped_column(unique=True)
+    password: Mapped[str]
+
+    # One-to-one (Account - User)
+    child_user: Mapped["User"] = relationship(
+        back_populates="parent_account", lazy="joined"
+    )
 
 
 class User(Base):
     __tablename__ = "user"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
-    email: Mapped[str] = mapped_column(unique=True, index=True)
-    username: Mapped[str] = mapped_column(unique=True)
-    password: Mapped[str]
-    role_id: Mapped[int]
+    account_id: Mapped[int] = mapped_column(ForeignKey("account.id"))
+    first_name: Mapped[str]
+    last_name: Mapped[str]
+    username: Mapped[str]
+    email: Mapped[str]
+    company_id: Mapped[int] = mapped_column(ForeignKey("company.id"))
+
+    parent_account: Mapped["Account"] = relationship(back_populates="child_user")
+    parent_company: Mapped["Company"] = relationship(
+        back_populates="child_user", lazy="joined"
+    )
+
+
+class Company(Base):
+    __tablename__ = "company"
+
+    id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
+    name: Mapped[str]
+    address: Mapped[str]
+
+    # One-to-many (Company - User)
+    child_user: Mapped[list["User"]] = relationship(
+        back_populates="parent_company", lazy="joined"
+    )
