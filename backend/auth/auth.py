@@ -1,14 +1,14 @@
+import secrets
+
+import bcrypt
 import sqlalchemy.exc
-from fastapi import Request, Depends, HTTPException, Response, FastAPI, APIRouter
-from fastapi.responses import RedirectResponse
+from fastapi import Request, Depends, HTTPException, Response, APIRouter
+from sqlalchemy.ext.asyncio.session import AsyncSession
 from starlette import status
 from starlette.responses import JSONResponse
 
-from .. import crud, schemas, models
+from .. import crud, schemas
 from ..database import get_async_session
-import secrets
-from sqlalchemy.ext.asyncio.session import AsyncSession
-import bcrypt
 
 router = APIRouter(
     prefix="/auth",
@@ -48,7 +48,6 @@ async def login(
     user_login_schema: schemas.UserLoginSchema,
     db: AsyncSession = Depends(get_async_session),
 ) -> JSONResponse:
-
     # check that user exists
     try:
         user_model = await crud.get_user_by_username(

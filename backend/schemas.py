@@ -1,7 +1,4 @@
-from typing import Optional
-
-from pydantic import BaseModel, model_validator, Json
-from urllib.parse import parse_qs
+from pydantic import BaseModel
 
 
 class UserLoginSchema(BaseModel):
