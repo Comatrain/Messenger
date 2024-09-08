@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from fastapi import status
 
 from . import schemas, crud, models
 from .database import get_async_session
@@ -13,7 +12,10 @@ async def get_test():
     return "This is test"
 
 
-@router.post("/user",     response_model=schemas.UserSchema,)
+@router.post(
+    "/user",
+    response_model=schemas.UserSchema,
+)
 async def create_user(
     user: schemas.UserSchema,
     db: AsyncSession = Depends(get_async_session),
@@ -23,10 +25,11 @@ async def create_user(
         db=db,
     )
 
+
 @router.get(
     "/user/{user_id}",
     response_model=schemas.UserSchema,
-            )
+)
 async def get_user_by_id(
     user_id: int,
     db: AsyncSession = Depends(get_async_session),
