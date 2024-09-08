@@ -1,3 +1,5 @@
+from typing import Optional
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -17,11 +19,26 @@ async def get_test():
     response_model=schemas.UserSchema,
 )
 async def create_user(
-    user: schemas.UserSchema,
+    login: str,
+    password: str,
+    first_name: str,
+    last_name: str,
+    email: str,
+    # TODO: do DRY for None
+    company_id: Optional[int] = None,
     db: AsyncSession = Depends(get_async_session),
-) -> models.User:
-    return await crud.create_user(
-        user=user,
+):
+    account_schema = schemas.AccountSchema(login=login, password=password)
+    user_schema = schemas.UserSchema(
+        account_login=login,
+        first_name=first_name,
+        last_name=last_name,
+        email=email,
+        company_id=company_id,
+    )
+    await crud.create_account_and_user(
+        account=account_schema,
+        user=user_schema,
         db=db,
     )
 

@@ -35,12 +35,12 @@ class User(Base):
     __tablename__ = "user"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
-    account_id: Mapped[int] = mapped_column(ForeignKey("account.id"))
+    # TODO: Can't create relationship with id because we didn't know id during create
+    account_login: Mapped[str] = mapped_column(ForeignKey("account.login"))
     first_name: Mapped[str]
     last_name: Mapped[str]
-    username: Mapped[str]
     email: Mapped[str]
-    company_id: Mapped[int] = mapped_column(ForeignKey("company.id"))
+    company_id: Mapped[int] = mapped_column(ForeignKey("company.id"), nullable=True)
 
     parent_account: Mapped["Account"] = relationship(back_populates="child_user")
     parent_company: Mapped["Company"] = relationship(
