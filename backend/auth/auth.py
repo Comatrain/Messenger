@@ -19,7 +19,7 @@
 #
 # # This must be randomly generated
 # RANDON_SESSION_ID = "iskksioskassyidd"
-# 
+#
 #
 # # This must be a lookup on user database
 # USER_CORRECT = ("admin", "admin")
