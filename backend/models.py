@@ -18,31 +18,17 @@ class Base(DeclarativeBase):
     metadata = metadata_obj
 
 
-class Account(Base):
-    __tablename__ = "account"
-
-    id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
-    login: Mapped[str] = mapped_column(unique=True)
-    password: Mapped[str]
-
-    # One-to-one (Account - User)
-    child_user: Mapped["User"] = relationship(
-        back_populates="parent_account", lazy="joined"
-    )
-
-
 class User(Base):
     __tablename__ = "user"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
-    # TODO: Can't create relationship with id because we didn't know id during create
-    account_login: Mapped[str] = mapped_column(ForeignKey("account.login"))
+    login: Mapped[str] = mapped_column(unique=True)
+    password: Mapped[str]
     first_name: Mapped[str]
     last_name: Mapped[str]
-    email: Mapped[str]
+    email: Mapped[str] = mapped_column(unique=True)
     company_id: Mapped[int] = mapped_column(ForeignKey("company.id"), nullable=True)
 
-    parent_account: Mapped["Account"] = relationship(back_populates="child_user")
     parent_company: Mapped["Company"] = relationship(
         back_populates="child_user", lazy="joined"
     )
