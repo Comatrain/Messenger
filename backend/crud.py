@@ -16,9 +16,17 @@ async def create_user(
     return user
 
 
-async def get_user_by_id(user_id: int, db: AsyncSession) -> User:
+async def get_user_by_id(user_id: int, db: AsyncSession) -> UserSchema:
     stmt = select(User).filter(User.id == user_id)
     result = await db.execute(stmt)
-    user_model = result.scalars().one()
-    # TODO: return user_schema
-    return user_model
+    user_model = result.unique().scalars().one()
+    user_schema = UserSchema.model_validate(user_model)
+    return user_schema
+
+
+async def get_user_by_name(user_name: str, db: AsyncSession) -> UserSchema:
+    stmt = select(User).filter(User.name == user_name)
+    result = await db.execute(stmt)
+    user_model = result.unique().scalars().one()
+    user_schema = UserSchema.model_validate(user_model)
+    return user_schema
