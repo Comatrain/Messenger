@@ -17,6 +17,7 @@ metadata_obj = MetaData(naming_convention=convention)
 class Base(DeclarativeBase):
     metadata = metadata_obj
 
+
 # TODO: Setup lazy loading for models
 class User(Base):
     __tablename__ = "user"
