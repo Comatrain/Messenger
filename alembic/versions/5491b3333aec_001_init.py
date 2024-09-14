@@ -1,8 +1,8 @@
 """001_init
 
-Revision ID: fc41c4fac8db
+Revision ID: 5491b3333aec
 Revises:
-Create Date: 2024-09-14 20:41:38.944236
+Create Date: 2024-09-14 21:40:51.905658
 
 """
 
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = "fc41c4fac8db"
+revision: str = "5491b3333aec"
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -32,7 +32,7 @@ def upgrade() -> None:
     op.create_table(
         "user",
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
-        sa.Column("name", sa.String(), nullable=False),
+        sa.Column("login", sa.String(), nullable=False),
         sa.Column("password", sa.String(), nullable=False),
         sa.Column("first_name", sa.String(), nullable=False),
         sa.Column("last_name", sa.String(), nullable=False),
@@ -43,7 +43,7 @@ def upgrade() -> None:
         ),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_user")),
         sa.UniqueConstraint("email", name=op.f("uq_user_email")),
-        sa.UniqueConstraint("name", name=op.f("uq_user_name")),
+        sa.UniqueConstraint("login", name=op.f("uq_user_login")),
     )
     op.create_index(op.f("ix_user_id"), "user", ["id"], unique=False)
     # ### end Alembic commands ###

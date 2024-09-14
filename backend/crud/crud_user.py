@@ -1,8 +1,8 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
-from .models import User
-from .schemas import UserSchema
+from backend.models import User
+from backend.schemas import UserSchema
 
 
 async def create_user(
@@ -24,8 +24,8 @@ async def get_user_by_id(user_id: int, db: AsyncSession) -> UserSchema:
     return user_schema
 
 
-async def get_user_by_name(user_name: str, db: AsyncSession) -> UserSchema:
-    stmt = select(User).filter(User.name == user_name)
+async def get_user_by_login(user_login: str, db: AsyncSession) -> UserSchema:
+    stmt = select(User).filter(User.login == user_login)
     result = await db.execute(stmt)
     user_model = result.unique().scalars().one()
     user_schema = UserSchema.model_validate(user_model)

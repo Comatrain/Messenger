@@ -11,7 +11,7 @@ def login():
     password = st.text_input("Password", type="password")
 
     if st.button("Log in"):
-        response = requests.get(f"{host}/user/name/{name}")
+        response = requests.get(f"{host}/user/login/{name}")
         data = response.json()
         # TODO: create pydantic instance?
         if name == data["name"] and password == data["password"]:

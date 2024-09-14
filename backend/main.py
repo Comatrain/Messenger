@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from backend.router import router as pages_router
+from backend.routers import router_user, router_company
 
 app = FastAPI()
 
@@ -20,4 +20,5 @@ app.add_middleware(
 )
 
 
-app.include_router(pages_router)
+app.include_router(router_user.router)
+app.include_router(router_company.router)

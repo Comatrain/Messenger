@@ -17,12 +17,12 @@ metadata_obj = MetaData(naming_convention=convention)
 class Base(DeclarativeBase):
     metadata = metadata_obj
 
-
+# TODO: Setup lazy loading for models
 class User(Base):
     __tablename__ = "user"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
-    name: Mapped[str] = mapped_column(unique=True)
+    login: Mapped[str] = mapped_column(unique=True)
     password: Mapped[str]
     first_name: Mapped[str]
     last_name: Mapped[str]
