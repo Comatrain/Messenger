@@ -41,7 +41,7 @@ async def get_user_by_id(
     "/name/{company_name}",
     response_model=CompanySchema,
 )
-async def get_user_by_username(
+async def get_company_by_name(
     company_name: str,
     db: AsyncSession = Depends(get_async_session),
 ) -> CompanySchema:
