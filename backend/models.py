@@ -1,5 +1,5 @@
-from sqlalchemy import MetaData, ForeignKey
-from sqlalchemy.orm import mapped_column, DeclarativeBase, Mapped, relationship
+from sqlalchemy import ForeignKey, MetaData
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 # configure constraint naming convention
 convention = {
